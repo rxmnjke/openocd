@@ -123,7 +123,7 @@ struct at32_flash_info
 	mcu_type_info   *type;
 	struct at32x_usd_data usd_data;
 	struct at32_spim_info spim_info;
-	
+
 };
 
 
@@ -223,12 +223,12 @@ static int at32_get_device_info(struct flash_bank *bank)
 		}
 	}
 	LOG_INFO("This is target %s algorithm", at32_mcu_type[at32x_info->type_id].name);
-	
-		
+
+
 	retval = at32x_get_product_id(bank, &(at32x_info->pid));
 	if (retval != ERROR_OK)
 		return retval;
-	
+
 	if(at32x_info->spim_info.is_support_spim == true)
 	{
 		uint32_t read_val;
@@ -238,7 +238,7 @@ static int at32_get_device_info(struct flash_bank *bank)
 		at32x_info->flash_size = at32x_info->spim_info.flash_size;
 		at32x_info->bank_size = at32x_info->spim_info.flash_size;
 		at32x_info->sector_num = at32x_info->bank_size / at32x_info->sector_size;
-		
+
 		/*enable gpio clock*/
 		retval = target_write_u32(bank->target, 0x40021018, 0xD);
 		if (retval != ERROR_OK)
@@ -250,7 +250,7 @@ static int at32_get_device_info(struct flash_bank *bank)
 			return retval;
 		read_val 	&= ~(0xf);
 		read_val |= 0x9;
-		
+
 		retval = target_write_u32(bank->target, 0x40010804, read_val);
 		if (retval != ERROR_OK)
 			return retval;
@@ -261,7 +261,7 @@ static int at32_get_device_info(struct flash_bank *bank)
 			return retval;
 		read_val 	&= ~(0xff0000f0);
 		read_val |= 0x99000090;
-		
+
 		retval = target_write_u32(bank->target, 0x40010c00, read_val);
 		if (retval != ERROR_OK)
 			return retval;
@@ -274,7 +274,7 @@ static int at32_get_device_info(struct flash_bank *bank)
 				return retval;
 			read_val 	&= ~(0x0000ff00);
 			read_val |= 0x00009900;
-		
+
 			retval = target_write_u32(bank->target, 0x40010c04, read_val);
 			if (retval != ERROR_OK)
 				return retval;
@@ -287,7 +287,7 @@ static int at32_get_device_info(struct flash_bank *bank)
 				return retval;
 			read_val 	&= ~(0x000ff000);
 			read_val |= 0x00099000;
-		
+
 			retval = target_write_u32(bank->target, 0x40010804, read_val);
 			if (retval != ERROR_OK)
 				return retval;
@@ -307,16 +307,16 @@ static int at32_get_device_info(struct flash_bank *bank)
 			if (retval != ERROR_OK)
 				return retval;
 		}
-			
+
 		/*flash type select*/
 		retval = target_write_u32(bank->target, 0x40022088, at32x_info->spim_info.flash_type);
 		if (retval != ERROR_OK)
 			return retval;
 
 		at32x_info->probed = 1;
-		LOG_INFO("spim flash size: 0x%" PRIx32 ", sector num:  0x%x, sector size: 0x%x", 
+		LOG_INFO("spim flash size: 0x%" PRIx32 ", sector num:  0x%x, sector size: 0x%x",
 				(at32x_info->flash_size ),  at32x_info->sector_num,  at32x_info->sector_size);
-		
+
 	}
 	else
 	{
@@ -327,7 +327,7 @@ static int at32_get_device_info(struct flash_bank *bank)
 		}
 
 		at32x_info->flash_size &= 0xFFFF;
-	
+
 		sector = (0x00007000 & at32x_info->pid) >> 12;
 		switch(sector)
 		{
@@ -349,7 +349,7 @@ static int at32_get_device_info(struct flash_bank *bank)
 				else
 					at32x_info->sector_size = SECTOR_SIZE_1K;
 				break;
-				
+
 		}
 
 		if(at32x_info->usd_addr == 0)
@@ -358,11 +358,11 @@ static int at32_get_device_info(struct flash_bank *bank)
 		}
 		if(at32x_info->bank_addr == BANK1_BASE_ADDR)
 		{
-		       if(at32x_info->cur_reg_base == 0)	
+		       if(at32x_info->cur_reg_base == 0)
 				at32x_info->cur_reg_base = at32_mcu_type[at32x_info->type_id].flash_bank1_reg;
 		}
-		else if((at32x_info->bank_addr == BANK2_BASE_ADDR || 
-		    at32x_info->bank_addr == BANK2_BASE_ADDR_4M) && 
+		else if((at32x_info->bank_addr == BANK2_BASE_ADDR ||
+		    at32x_info->bank_addr == BANK2_BASE_ADDR_4M) &&
 		   at32x_info->flash_size > 512)
 		{
 		      if(at32x_info->cur_reg_base == 0)
@@ -388,7 +388,7 @@ static int at32_get_device_info(struct flash_bank *bank)
 					at32x_info->bank_size = (at32x_info->flash_size << 10) - 0x200000;
 					at32x_info->sector_num = at32x_info->bank_size / at32x_info->sector_size;
 				}
-			
+
 			}
 			else
 			{
@@ -407,10 +407,10 @@ static int at32_get_device_info(struct flash_bank *bank)
 		else
 		{
 			at32x_info->sector_num = (at32x_info->flash_size << 10) / at32x_info->sector_size;
-			at32x_info->bank_size = at32x_info->flash_size << 10;		
+			at32x_info->bank_size = at32x_info->flash_size << 10;
 		}
 		at32x_info->probed = 1;
-		LOG_INFO("main flash size: 0x%" PRIx32 ", sector num:  0x%" PRIx32 ", sector size: 0x%" PRIx32 ",  bank size: 0x%" PRIx32 "", 
+		LOG_INFO("main flash size: 0x%" PRIx32 ", sector num:  0x%" PRIx32 ", sector size: 0x%" PRIx32 ",  bank size: 0x%" PRIx32 "",
 				 (at32x_info->flash_size << 10),  at32x_info->sector_num,  at32x_info->sector_size, at32x_info->bank_size);
 	}
 
@@ -423,7 +423,7 @@ static int at32_get_device_info(struct flash_bank *bank)
 FLASH_BANK_COMMAND_HANDLER(at32x_flash_bank_command)
 {
 	struct at32_flash_info *at32x_info;
-	
+
 	if (CMD_ARGC < 6)
 		return ERROR_COMMAND_SYNTAX_ERROR;
 	at32x_info = malloc(sizeof(struct at32_flash_info));
@@ -431,10 +431,10 @@ FLASH_BANK_COMMAND_HANDLER(at32x_flash_bank_command)
 	if( bank->base == SPIM_BASE_ADDR)
 	{
 		uint32_t io_mux, type, size;
-		
+
 		if(CMD_ARGC < 9)
 			return ERROR_COMMAND_SYNTAX_ERROR;
-		
+
 		COMMAND_PARSE_NUMBER(u32, CMD_ARGV[6], io_mux);
 		COMMAND_PARSE_NUMBER(u32, CMD_ARGV[7], type);
 		COMMAND_PARSE_NUMBER(u32, CMD_ARGV[8], size);
@@ -464,7 +464,7 @@ FLASH_BANK_COMMAND_HANDLER(at32x_flash_bank_command)
 		{
 			at32x_info->usd_addr = 0;
 		}
-		LOG_INFO("flash reg address: 0x%" PRIx32 ", usd addr:  0x%x", 
+		LOG_INFO("flash reg address: 0x%" PRIx32 ", usd addr:  0x%x",
 				(at32x_info->cur_reg_base ),  at32x_info->usd_addr);
 	}
 	bank->driver_priv = at32x_info;
@@ -480,7 +480,7 @@ static inline void at32x_set_base_reg(struct flash_bank *bank, uint32_t bank_reg
 }
 static inline int at32x_get_flash_reg(struct flash_bank *bank, uint32_t reg)
 {
-   
+
 	struct at32_flash_info *at32x_info = bank->driver_priv;
 	return (reg + at32x_info->cur_reg_base);
 }
@@ -498,7 +498,7 @@ static int at32x_wait_status_busy(struct flash_bank *bank, int timeout)
 	uint32_t status;
 	int retval = ERROR_OK;
 	/* wait for busy to clear */
-	for (;;) 
+	for (;;)
 	{
 		retval = at32x_get_flash_status(bank, &status);
 		if (retval != ERROR_OK)
@@ -531,7 +531,7 @@ static int at32x_read_usd_data(struct flash_bank *bank)
 	struct target *target = bank->target;
 	uint32_t usd_data;
 	int retval;
-      
+
 	/* read user and read protection option bytes */
 //	retval = target_read_u32(target, AT32_USD_BASE_ADDR, &usd_data);
 	retval = target_read_u32(target, at32x_info->usd_addr, &usd_data);
@@ -591,11 +591,11 @@ static int at32x_erase_usd_data(struct flash_bank *bank)
 		return retval;
 
 	/* erase user system data */
-	retval = target_write_u32(target, at32x_get_flash_reg(bank, AT32_FLASH_CTRL_OFFSET), 
+	retval = target_write_u32(target, at32x_get_flash_reg(bank, AT32_FLASH_CTRL_OFFSET),
 							  FLASH_USDERS | FLASH_USDULKS);
 	if (retval != ERROR_OK)
 		return retval;
-	
+
 	retval = target_write_u32(target, at32x_get_flash_reg(bank, AT32_FLASH_CTRL_OFFSET),
 							FLASH_USDERS | FLASH_ERSTR | FLASH_USDULKS);
 	if (retval != ERROR_OK)
@@ -604,7 +604,7 @@ static int at32x_erase_usd_data(struct flash_bank *bank)
 	retval = at32x_wait_status_busy(bank, FLASH_SECTOR_ERASE_TIMEOUT);
 	if (retval != ERROR_OK)
 		return retval;
-	
+
 	return ERROR_OK;
 }
 
@@ -632,7 +632,7 @@ static int at32x_write_usd_data(struct flash_bank *bank)
 		return retval;
 
 	/* program option bytes */
-	retval = target_write_u32(target, at32x_get_flash_reg(bank, AT32_FLASH_CTRL_OFFSET), 
+	retval = target_write_u32(target, at32x_get_flash_reg(bank, AT32_FLASH_CTRL_OFFSET),
 							FLASH_USDPRGM | FLASH_USDULKS);
 	if (retval != ERROR_OK)
 		return retval;
@@ -685,7 +685,7 @@ static int at32x_erase(struct flash_bank *bank, unsigned int first, unsigned int
 	int retval;
 	unsigned int i;
 
-	LOG_INFO("Earse first sector = 0x%" PRIx32 ", last sector = 0x%" PRIx32 " ", first, last);
+	LOG_INFO("Erase first sector = 0x%" PRIx32 ", last sector = 0x%" PRIx32 " ", first, last);
 
 	if (bank->target->state != TARGET_HALTED) {
 		LOG_ERROR("Target not halted");
@@ -864,7 +864,7 @@ static int at32x_write(struct flash_bank *bank, const uint8_t *buffer,
 	uint8_t *new_buffer = NULL;
 
 	LOG_INFO("Write address = 0x%" PRIx32 ", count: 0x%" PRIx32 "", (uint32_t)bank->base + offset,  count);
-	
+
 	if (bank->target->state != TARGET_HALTED) {
 		LOG_ERROR("Target not halted");
 		return ERROR_TARGET_NOT_HALTED;
@@ -968,7 +968,7 @@ static int at32x_probe(struct flash_bank *bank)
 	}
 	bank->size = at32x_info->bank_size;
 	bank->num_sectors = num_pages;
-	
+
 	bank->sectors = alloc_block_array(0, at32x_info->sector_size, num_pages);
 	if (!bank->sectors)
 		return ERROR_FAIL;
