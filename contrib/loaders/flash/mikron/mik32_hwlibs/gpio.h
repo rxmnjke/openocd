@@ -1,0 +1,36 @@
+#ifndef GPIO_H_INCLUDED
+#define GPIO_H_INCLUDED
+
+#define GPIO_STATE				0x00 
+#define GPIO_SET				0x00 
+#define GPIO_CLEAR				0x04 
+#define GPIO_DIRECTION_OUT		0x08 
+#define GPIO_DIRECTION_IN		0x0C 
+#define GPIO_OUTPUT             0x10
+#define GPIO_CONTROL			0x14 
+
+#define GPIO_PIN_M(p) (1<<p)
+#define GPIO_PIN_STATE(g,p) (g->STATE&GPIO_PIN_M(p))
+
+
+#ifndef __ASSEMBLER__
+    #include <stdint.h>
+
+    typedef struct
+    {
+        union
+        {
+            volatile uint32_t SET;
+            volatile uint32_t STATE;
+        };                
+        volatile uint32_t CLEAR;               
+        volatile uint32_t DIRECTION_OUT;       
+        volatile uint32_t DIRECTION_IN;        
+        volatile uint32_t OUTPUT;
+        volatile uint32_t CONTROL;  
+        
+    } GPIO_TypeDef;
+
+#endif
+
+#endif    
