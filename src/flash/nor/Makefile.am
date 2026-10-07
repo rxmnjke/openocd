@@ -42,6 +42,13 @@ NOR_DRIVERS = \
 	%D%/fm3.c \
 	%D%/fm4.c \
 	%D%/jtagspi.c \
+	%D%/k1921vg015.c \
+	%D%/k1921vg1t.c \
+	%D%/k1921vg3t.c \
+	%D%/k1921vg5t.c \
+	%D%/k1921vg7t.c \
+	%D%/k1921vk028.c \
+	%D%/k1921vk035.c \
 	%D%/kinetis.c \
 	%D%/kinetis_ke.c \
 	%D%/lpc2000.c \
@@ -51,6 +58,12 @@ NOR_DRIVERS = \
 	%D%/max32xxx.c \
 	%D%/max32xxx_qspi.c \
 	%D%/mdr.c \
+	%D%/mdr149.c \
+	%D%/mdr187.c \
+	%D%/mdr215.c \
+	%D%/mdr217.c \
+	%D%/mik32_eeprom.c \
+	%D%/mik32_flash.c \
 	%D%/msp432.c \
 	%D%/mspm0.c \
 	%D%/mrvlqspi.c \
